@@ -1,0 +1,175 @@
+//Name: Joseph Mycek
+//Date: October 14, 2011
+//Purpose: The purpose of this program is to determine candidate keys 
+//         out of a group of superkeys.
+//Inputs and Outputs: The input consists of a set of superkeys. The 
+//          output is a set of candidate keys to a file.
+//Exceptions: If characters in a single superkey are identical, the 
+//         program might not run properly.
+
+import java.util.Scanner;
+import java.io.PrintWriter;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+
+public class project2_Mycek
+{
+    public static void main (String[] args)
+    {
+        Scanner keyboard = new Scanner(System.in);
+        String[] superkey = new String[100];
+        String[] candidate = new String[100];
+        
+        String tempdata = "start";
+        String tempdata2 = "start";
+        String tempdata3 = "start";
+        String test = "X";
+        int proceed = 0;
+        int proceed2 = 0;
+        int total = 0;
+        int cantotal = 0;
+        int elimnum = 0;
+        int temptotal;
+        boolean eliminate = true;
+        
+    //Checking to make sure the output goes to the file.
+    
+        PrintWriter outputStream = null;
+        try
+        {
+            outputStream = new PrintWriter(new FileOutputStream("candidate-keys.txt"));
+        }
+        
+        catch(FileNotFoundException e)
+        {
+            System.out.println("File not found, please try again.");
+            System.exit(0);
+            
+        }
+        
+    //The program will ask you to enter up to 100 superkeys. If you 
+    //input more than that, the program will crash. Enter the desired
+    //superkeys, then type X when you're done.
+        
+        System.out.println("Enter superkeys.");
+        System.out.println("When you are done, type X and press enter.");
+
+        while (proceed == 0)
+        {
+            if (tempdata.equals(test))
+            {
+                proceed = 1;
+                total--;
+            }
+            
+            else
+            {
+                tempdata = keyboard.next();
+                superkey[total] = tempdata;
+                total++;
+            }
+        }    
+        
+        temptotal = total - 1;
+        
+        //The list of superkeys are then sorted according to length in
+        //ascending order.
+        
+        while (proceed2 < temptotal)
+        {
+            tempdata = superkey[proceed2]; 
+            tempdata2 = superkey[proceed2 + 1];
+            
+            if (tempdata.length() > tempdata2.length())
+            {
+                tempdata3 = superkey[proceed2];
+                superkey[proceed2] = superkey[proceed2 + 1];
+                superkey[proceed2 + 1] = tempdata3;
+                proceed2 = 0;
+            }
+            
+            else
+            {
+                proceed2++;
+            }        
+        }
+        
+        //For each of the elements, if a superkey has become an "X",
+        //it is skipped. If not, then it is inserted into the list of 
+        //candidate keys. Then, it is checked with the superkeys after 
+        //it to determine if its elements match the elements in another
+        //superkey. If there is, that superkey becomes an "X" and is no
+        //longer eligible to become a candidate key. This continues until
+        //all possible candidate keys have been found.
+        
+        
+        for (int i = 0; i < total; i++)
+        {
+            if (superkey[i].equals(test))
+            {
+                System.out.println("");
+            }
+            
+            else
+            {
+                candidate[cantotal] = superkey[i];
+                cantotal++;
+                
+                tempdata = superkey[i];
+                temptotal = total - 1;
+                
+                if (i != temptotal)
+                {
+                    int j = i + 1;
+                    
+                    while (j < total)
+                    {
+                        eliminate = true;
+                        tempdata2 = superkey[j];
+                                                
+                        for (int k = 0; k < tempdata.length(); k++)
+                        {
+                            elimnum = 0;
+                            
+                            for (int m = 0; m < tempdata2.length(); m++)
+                            {
+                                if (tempdata.charAt(k) == tempdata2.charAt(m))
+                                {
+                                    elimnum = 0;
+                                }
+                                
+                                else
+                                {
+                                    elimnum++;
+                                }
+                                
+                                if (elimnum == tempdata2.length())
+                                {
+                                    eliminate = false;
+                                }
+                            }
+                        }
+                        
+                        if (eliminate == true)
+                        {
+                            superkey[j] = test;
+                        }
+                        
+                        j++;
+                    
+                    }    
+                }        
+            }
+        }    
+        
+    //Finally, the elements in the candidate key array are outputted to
+    //the file.
+    
+        for (int i = 0; i < cantotal; i++)
+        {
+            outputStream.println(candidate[i]);
+        }
+        
+        outputStream.close();
+    }
+}
