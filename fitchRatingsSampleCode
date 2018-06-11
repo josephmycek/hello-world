@@ -1,0 +1,46 @@
+DBAdapter db = null;
+        ResultSet rs = null;
+        ArrayList<String> result = null;
+       
+        System.out.println("Outside try.");
+        try 
+        {
+              System.out.println("Inside try.");
+ 
+              int numLines = 0;
+              int id = 0;
+              String name = “”;
+                          
+               db = new DBAdapter();
+             db.prepareStatement("SELECT FII_CORE.mngmnt_line.mngmnt_line_id,
+FII_CORE.mngmnt_line.mngmnt_line_desc FROM ftch_rtng.mngmnt_line_rtng_grp INNER JOIN FII_CORE.mngmnt_line ON ftch_rtng.mngmnt_line_rtng_grp.mngmnt_line_id = FII_CORE.mngmnt_line.mngmnt_line_id WHERE ftch_rtng.mngmnt_line_rtng_grp.mngmnt_line_id = 92948496");
+ 
+             rs = db.executeQuery();
+ 
+              if (rs != null)  {
+             while (rs.next())  {
+                    numLines++;                  
+                     id = setId(rs.getString(1));
+                    name = setName(rs.getString(2));
+ 
+                     String identity = "management" +  numLines;
+                     String name = "management" + numLines + ".id";
+                     String button = "button" + numLines;
+                    
+                     System.out.println("Identity = " + identity);
+                     System.out.println("Name = " + name);
+              %>
+             
+              <div class="span5">
+            <div class="control-group">
+                <lable class="control-label" for="<%=identity%>"></lable>
+                <div class="controls">
+                    <select id="<%=identity%>" name="<%=name%>"></select>
+                    <input id="<%=button%>" type="button" value="Delete" onClick="removeDrop2('<%=identity %>', '<%=button %>')" />                 
+                </div>
+            </div>
+        </div>
+ 
+                }   
+            }
+ 
