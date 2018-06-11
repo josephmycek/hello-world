@@ -1,0 +1,19 @@
+function setCookie(name,value)
+{
+    var c_name;
+    var c_value;
+
+    if (document.cookie == null)
+    {
+         c_name=name;
+         c_value=value;
+        document.cookie=c_name + "=" + c_value;
+   }
+
+   else 
+   {
+         c_name=c_name+name;
+         c_value=c_value+value;
+         document.cookie=c_name + "=" + c_value;
+   }       
+}
