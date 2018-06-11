@@ -1,0 +1,41 @@
+ sb = new StringBuffer("onclick=\"javascript:  var phoneLength = document.form1.phone1phoneNumber.value.length + document.form1.phone2phoneNumber.value.length + document.form1.phone3phoneNumber.value.length;   if(document.getElementById('Military').checked){if(document.form1.addressLine1Military.value.trim()==''  ||  document.form1.stateMilitaryforMilitary.value.trim()==''     ||  document.form1.militaryPocodesMilitary.value.trim()==''  ||  document.form1.zipCode1ResidenceMilitary.value.trim()==''){alertMe('AR4014'); return false;};};                 if(!isNumeric(document.form1.phone1phoneNumber)){return false;}; if(!isNumeric(document.form1.phone2phoneNumber)){return false;}; if(!isNumeric(document.form1.phone3phoneNumber)){return false;};           if(phoneLength != 0 && phoneLength != 10){alertMe('GL109', 'Phone Number', 'Phone Number'); return false;};                    setActionFieldAndSubmit(document.form1,'"+ViewConstants.NEXT_BUTTON+"','N');return false;\" " );
+   
+   sb.append("var rep = /^[ A-Za-z0-9_'-/#,]*$/; ");
+   sb.append("var check = true; ");
+   sb.append("var val1US = document.form1.Results_item_addressLine1.value; ");
+   sb.append("var val2US = document.form1.Results_item_addressLine22.value;");
+   sb.append("var val1M = document.form1.addressLine1Military.value; ");
+   sb.append("var val2M = document.form1.addressLine2Military.value; ");
+   sb.append("var val3M = document.form1.addressLine3Military.value; ");
+   
+   sb.append("if(!(val1US.match(rep) && (val1US.charAt(0)!= ' '))){alertMe('GL201', document.form1.Results_item_addressLine1.value);check = false;}; ");
+   sb.append("if(!(val2US.match(rep) && (val2US.charAt(0)!= ' '))){alertMe('GL201', document.form1.Results_item_addressLine22.value);check = false;};");
+   sb.append("if(!(val1M.match(rep) && (val1M.charAt(0)!= ' '))){alertMe('GL201', document.form1.addressLine1Military.value);check = false;}; ");
+   sb.append("if(!(val2M.match(rep) && (val2M.charAt(0)!= ' '))){alertMe('GL201', document.form1.addressLine2Military.value);check = false;}; ");
+   sb.append("if(!(val3M.match(rep) && (val3M.charAt(0)!= ' '))){alertMe('GL201', document.form1.addressLine3Military.value);check = false;}; ");
+     
+   sb.append("if(document.getElementById('US/Canada').checked){");
+           sb.append("if(!isAlphaSpaces(document.form1.Results_item_city)){alertMe('GL006',document.form1.Results_item_city,'City'); check = false; };");
+        
+           sb.append("if(!isNumeric(document.form1.Results_item_zipCode5)){check = false;}; ");
+        sb.append("if(!isNumeric(document.form1.zipCode2ResidenceUSCanada)){check = false;}; ");
+        
+        sb.append("var zip1 = document.form1.Results_item_zipCode5.length");
+        sb.append("var zip2 = document.form1.zipCode2ResidenceUSCanada.length");
+        sb.append("if(zip1 < 5){alertMe('GL202',document.form1.Results_item_zipCode5,'Zip/Postal Code');check = false;}; ");   
+        sb.append("if(zip2 < 4 && zip2 > 0){alertMe('GL203',document.form1.zipCode2ResidenceUSCanada,'Zip/Postal Code');check = false;}; ");
+        
+        sb.append("if(document.form1.Results_item_addressLine1.value.trim()==''  ||  document.form1.Results_item_city.value.trim()==''     ||  document.form1.Results_item_stateProvince.value.trim()==''  ||  document.form1.Results_item_zipCode5.value.trim()==''){alertMe('GL162'); check = false;};");
+   sb.append("}; ");
+        
+   sb.append("if(document.getElementById('Military').checked){");
+           sb.append("if(!isNumeric(document.form1.)){check = false;}; ");
+           sb.append("if(!isNumeric(document.form1.zipCode2ResidenceUSCanada)){check = false;}; ");
+           
+        sb.append("var zip1 = document.form1.Results_item_zipCode5.length");
+        sb.append("var zip1 = document.form1.Results_item_zipCode5.length");
+        sb.append("var zip1 = document.form1.Results_item_zipCode5.length");
+        sb.append("var zip1 = document.form1.Results_item_zipCode5.length");
+        sb.append("var zip1 = document.form1.Results_item_zipCode5.length");
+        sb.append("var zip1 = document.form1.Results_item_zipCode5.length");
+        sb.append("var zip1 = document.form1.Results_item_zipCode5.length");
