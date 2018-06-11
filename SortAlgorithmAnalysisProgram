@@ -1,0 +1,756 @@
+/***************************************************************************************************
+****************************************************************************************************
+**                                         Project CSCI-4520                                      **
+**                                    Efficiency of Sorting Algorithms                            **
+**                                                                                                **
+**     Class         CSCI-4520 Analysis of Algorithms                                             **
+**                                                                                                **
+**     Team Members                                                                               **
+**                   Lawrence P. Hartmangruber                                                    **
+**                   Joseph Mycek                                                                 **
+**                                                                                                **
+**     Date          11-29-2011                                                                   **
+**                                                                                                **
+**     Program name  SortAlgorithmAnalysisProgram.java                                            **
+**                                                                                                **
+**     Purpose:      This  program is used to demonstrate the amount of time required to sort     **
+**                   arrays of different patterns and sizes.  The four sorting algorithms         **
+**                   are as follows:                                                              **
+**                        Bubble Sort                                                             **
+**                        Selection Sort                                                          **
+**                        Merge Sort                                                              **
+**                        Quick Sort                                                              **
+**                                                                                                **
+**                   The demonstration program will load an array with                            **
+**                        Ten different sizes of data                                             **
+**                        Four different patterns                                                 **
+**                                                                                                **
+**                   The user selects the sorting algorithm to be timed.                          **
+**                   Once the algorithm is selected, the demonstration program will run           **
+**                   four different patterns consisting of the following:                         **
+**                        Ascending  integers                                                     **
+**                        Descending integers                                                     **
+**                        All        1's                                                          **
+**                        Random     integers                                                     **
+**                   Five different array sizes for each pattern will be sent to the sorting      **
+**                   algorithm.  The process will be repeated one hundred times for each          **
+**                   array size and combination.  Each pattern / array size combination will      **
+**                   produce a time stamp that will be used to indicate the time required for     **
+**                   a sorting operation to take place.  The data will be stored in a series of   **
+**                   files that indicate their data type by their file names.                     **
+**                                                                                                **
+**                   At the end of each sorting operation, the first and last one hundred entries **
+**                   will be displayed to the user to show the success of the sorting operation.  **
+**                                                                                                **
+**                                                                                                **
+****************************************************************************************************
+***************************************************************************************************/
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Scanner;                                                // keyboard entry
+import java.io.*;                                                            // disk io
+import java.util.Random;
+
+public class SortAlgorithmAnalysisProgram
+{
+/* ====================================================================
+   PPPPP   AAAAAAA  TTTTTTT  TTTTTTT  EEEEEEE  RRRRRR   N     N  SSSSSS
+   P    P  A     A     T        T     E        R     R  NN    N  S     
+   P    P  A     A     T        T     E        R     R  N N   N  S     
+   PPPPP   AAAAAAA     T        T     EEEE     RRRRRR   N  N  N  SSSSSS
+   P       A     A     T        T     E        R    R   N   N N       S
+   P       A     A     T        T     E        R     R  N    NN       S
+   P       A     A     T        T     EEEEEEE  R     R  N     N  SSSSSS
+   ====================================================================*/
+    public static void loadArrayToBeSorted( int[] array , int intNumberOfElements , int intPatternSelection )
+    {                                                                            // use to load array with descending integers
+
+        int    intCounter = 0;                                            // used to hold integer to place into array
+    
+        // *****************************************************
+        // LOAD ARRAY WITH ASCENDING NUMBERS 0 , 1 , 2 , 3 ... N-1
+        // *****************************************************
+        if( intPatternSelection == 1 )
+        {        
+            intCounter = 0;
+            for ( int intL = 0 ; intL < intNumberOfElements ; intL++ )
+            {
+                array[intL] = intCounter;                                // load array with forwards count
+                intCounter++;
+            }                                                                    // end loading array with ascending integers
+        }
+        // *****************************************************
+        // LOAD ARRAY WITH DESCENDING NUMBERS N-1 , N-2 , N-3 ... 0
+        // *****************************************************
+        if( intPatternSelection == 2 )
+        {        
+            intCounter = intNumberOfElements - 1;
+            for ( int intL = 0 ; intL < intNumberOfElements ; intL++ )
+            {
+                array[intL] = intCounter;                                // load array with backwards count
+                intCounter--;
+            }                                                                    // end loading array with descending integers
+        }
+        // *****************************************************
+        // LOAD ARRAY WITH ALL 1s 1 , 1 , 1 , ... (N-1)th 1
+        // *****************************************************
+        if( intPatternSelection == 3 )
+        {        
+            for ( int intL = 0 ; intL < intNumberOfElements ; intL++ )
+            {
+                array[intL] = 1;                                            // load array with all 1s
+            }                                                                    // end loading array with all 1s
+        }
+
+        // *****************************************************
+        // LOAD ARRAY WITH ALL RANDOM INTEGERS
+        // *****************************************************
+        if( intPatternSelection == 4 )
+        {        
+            int intRandomNumber  = 0;
+            Random randomNumbers = new Random();
+        
+            for ( int intL = 0 ; intL < intNumberOfElements ; intL++ )
+            {
+                array[intL] = randomNumbers.nextInt();                // load array with random integer
+            }                                                                    // end loading array with random integers
+        }                                                                        // end loadArrayToBeSorted
+    }
+
+/* ==========================================================================================================
+   SSSSSS  EEEEEE  L       EEEEEE  CCCCCC  TTTTTTT  III  OOOOOO  N      N     SSSSSS  OOOOOO  RRRRRR  TTTTTTT
+   S       E       L       E       C          T      I   O    O  N N    N     S       O    O  R    R     T
+   S       E       L       E       C          T      I   O    O  N  N   N     S       O    O  R    R     T
+   SSSSSS  EEEE    L       EEEE    C          T      I   O    O  N   N  N     SSSSSS  O    O  RRRRRR     T
+        S  E       L       E       C          T      I   O    O  N    N N          S  O    O  R  R       T
+        S  E       L       E       C          T      I   O    O  N     NN          S  O    O  R   R      T
+   SSSSSS  EEEEEE  LLLLLL  EEEEEE  CCCCCC     T     III  OOOOOO  N      N     SSSSSS  OOOOOO  R    R     T
+   ==========================================================================================================*/
+    public static void SelectionSort( int intOriginalArray[] )
+    {
+        int    intTemporaryMinimumValue = 0;                            // present smallest value
+        int    intTemporaryMinimumValueIndex = 0;                    // present location in array of smallest value 
+        
+        int    intArrayPositionToUpdate = 0;                            // hold position in array to write out the smallest value
+        int    intScanTheArray = 0;                                        // variable used to scan array
+        int    temp = 0;                                                    // temporary holding variable for swap routine        
+
+        // ****************************************
+        // BEGIN SORTING ARRAY INTO ASCENDING ORDER
+        // ****************************************
+
+        for( intArrayPositionToUpdate = 0 ; intArrayPositionToUpdate < intOriginalArray.length ; intArrayPositionToUpdate++ )
+        {
+            intTemporaryMinimumValue = intOriginalArray[intArrayPositionToUpdate];    // record value to compare rest of array to
+            intTemporaryMinimumValueIndex = intArrayPositionToUpdate;
+        
+            for( intScanTheArray = intArrayPositionToUpdate + 1 ; intScanTheArray < intOriginalArray.length ; intScanTheArray++ )
+            {
+                if ( intOriginalArray[intScanTheArray] < intTemporaryMinimumValue )    //    determine smallest value
+                {
+                                intTemporaryMinimumValue = intOriginalArray[intScanTheArray];
+                                intTemporaryMinimumValueIndex = intScanTheArray;
+                }
+            }                                                                    // finished scanning array
+
+            temp = intOriginalArray[intArrayPositionToUpdate];    // swap array elements
+            intOriginalArray[intArrayPositionToUpdate] = intTemporaryMinimumValue;
+            intOriginalArray[intTemporaryMinimumValueIndex] = temp;
+
+        }                                                                        // end of sorting routine
+    }                                                                            // end of SelectionSort
+    
+/* ================================================================================
+   BBBBB   U    U  BBBBB   BBBBB   L       EEEEEE   SSSSSS  OOOOOO  RRRRRR  TTTTTTT
+   B    B  U    U  B    B  B    B  L       E        S       O    O  R    R     T
+   B   B   U    U  B   B   B   B   L       E        S       O    O  R    R     T
+   BBBB    U    U  BBBB    BBBB    L       EEEEE    SSSSSS  O    O  RRRRRR     T 
+   B   B   U    U  B   B   B   B   L       E             S  O    O  R  R       T
+   B    B   U  U   B    B  B    B  L       E             S  O    O  R   R      T
+   BBBBB     UU    BBBBB   BBBBB   LLLLLL  EEEEEE   SSSSSS  OOOOOO  R    R     T
+   ================================================================================*/
+    public static void BubbleSort( int bubblearray[] )
+    {
+        int tempnum;
+        int end = 0;
+        int    intUserEntry = 0;
+        int    intReplacePosition = 0;        
+        
+        while (end == 0 && intReplacePosition < bubblearray.length - 1 )
+        {
+            end = 1;
+            for (int i = 0 ; i < (bubblearray.length - 1)-intReplacePosition ; i++)
+            {
+                if (bubblearray[i] > bubblearray[i+1])
+                {
+                    end = 0;
+                    
+                    tempnum = bubblearray[i];
+                    bubblearray[i] = bubblearray[i+1];
+                    bubblearray[i+1] = tempnum;
+                }
+            }
+            
+            intReplacePosition++;
+        }
+    }                                                                            // end of BubbleSort
+
+/* ===========================================================================
+   M     M  EEEEEE  RRRRRR  GGGGGG  EEEEEE     SSSSSS  OOOOOO  RRRRRR  TTTTTTT
+   MM   MM  E       R    R  G       E          S       O    O  R    R     T
+   M M M M  E       R    R  G       E          S       O    O  R    R     T
+   M  M  M  EEEE    RRRRRR  G GGGG  EEEE       SSSSSS  O    O  RRRRRR     T
+   M     M  E       R  R    G    G  E               S  O    O  R  R       T
+   M     M  E       R   R   G    G  E               S  O    O  R   R      T 
+   M     M  EEEEEE  R    R  GGGGGG  EEEEEE     SSSSSS  OOOOOO  R    R     T
+   ===========================================================================*/
+    public static void MergeSort( int dataarray[] )
+    {
+        int intBlockSize = 1;
+        int innerloop = 0;
+        int outerloop = 0;
+        int leftleft = 0;
+        int leftright = 0;
+        int rightleft = 1;
+        int rightright = 1;
+
+        int[] original = new int[dataarray.length];
+        int[] temparray;
+        int[] copyarray = new int[dataarray.length];
+
+        original = dataarray;
+
+        while (intBlockSize < dataarray.length )
+        {
+            while( innerloop <  dataarray.length )
+            {
+                while ( leftleft <= leftright && rightleft <= rightright && innerloop < dataarray.length )
+                {
+                    if ( dataarray[leftleft] <= dataarray[rightleft] )
+                    {
+                        copyarray[innerloop] = dataarray[leftleft];
+                        leftleft++;
+                        innerloop++;
+                    }
+                    else
+                    {
+                        copyarray[innerloop] = dataarray[rightleft];
+                        rightleft++;                        
+                        innerloop++;
+                    }
+                }
+                    
+                while ( leftleft <= leftright && innerloop < dataarray.length)
+                {
+                    copyarray[innerloop] = dataarray[leftleft];
+                    leftleft++;
+                    innerloop++;
+                }
+
+                while ( rightleft <= rightright && innerloop < dataarray.length)
+                {
+                    copyarray[innerloop] = dataarray[rightleft];
+                    rightleft++;
+                    innerloop++;
+                }
+
+                leftleft = innerloop;
+                leftright = leftleft + (intBlockSize - 1);
+                if (leftleft > dataarray.length - 1)
+                {
+                    leftleft = dataarray.length - 1;
+                }                    
+            
+                if (leftright > dataarray.length - 1)
+                {
+                    leftright = dataarray.length - 1;
+                }                    
+                rightleft = leftright + 1;
+                if (rightleft > dataarray.length - 1)
+                {
+                    rightleft = dataarray.length - 1;
+                }
+                rightright = rightleft + (intBlockSize - 1);
+                if (rightright >= dataarray.length - 1)
+                {
+                    rightright = dataarray.length - 1;
+                }
+            }            
+
+            intBlockSize = intBlockSize * 2;                                                    
+            leftleft = 0;
+            leftright = leftleft + (intBlockSize - 1);
+            rightleft = leftright + 1;
+
+            if (rightleft > dataarray.length - 1)
+            {
+                rightleft = dataarray.length - 1;
+            }
+
+            rightright = rightleft + (intBlockSize - 1);
+
+            if (rightright >= dataarray.length - 1)
+            {
+                rightright = dataarray.length - 1;
+            }
+                
+            innerloop = 0;
+
+            temparray = copyarray;
+            copyarray = dataarray;
+            dataarray = temparray;
+                
+        }                                                                        // end main while loop
+
+        for ( int l = 0 ; l < dataarray.length ; l++ )    
+        {
+            original[l] = dataarray[l];
+        }    
+
+    }                                                                            //    end of MergeSortSortArray
+
+/* ==========================================================================
+     QQQQ    U      U  III  CCCCC  K    K     SSSSSS  OOOOOO  RRRRRR  TTTTTTT
+    Q    Q   U      U   I  C       K   K      S       O    O  R    R     T
+   Q      Q  U      U   I  C       K  K       S       O    O  R    R     T
+   Q      Q  U      U   I  C       KKK        SSSSSS  O    O  RRRRRR     T
+   Q      Q  U      U   I  C       K  K            S  O    O  R  R       T
+    Q    Q    U    U    I  C       K   K           S  O    O  R   R      T 
+     QQQQ Q    UUUU    III  CCCCC  K    K     SSSSSS  OOOOOO  R    R     T
+   ==========================================================================*/
+    public static void QuickSort( int quickArray[] )
+    {
+        int[] rightArray = new int[quickArray.length];
+        int numberOfChecks = 1;
+        int l = 0;
+        int r = quickArray.length - 1;
+        int pivot = quickArray[l]; 
+        int leftnum = l + 1;
+        int rightnum = r;
+        int tempnum;
+        boolean compQuickSort = false;
+        
+        while (compQuickSort == false)
+        {
+            if (l < r)
+            {
+                pivot = quickArray[l]; 
+                leftnum = l + 1;
+                rightnum = r;
+                
+                while (leftnum <= rightnum)
+                {
+                    while (quickArray[leftnum] < pivot && leftnum < r)
+                    {
+                        leftnum++;
+                    }    
+            
+                    while (quickArray[rightnum] > pivot && rightnum > l)
+                    {
+                        rightnum--;
+                    }
+                    
+                    if (leftnum < rightnum)
+                    {
+                        tempnum = quickArray[leftnum];
+                        quickArray[leftnum] = quickArray[rightnum];
+                        quickArray[rightnum] = tempnum;
+                    
+                        leftnum++;
+                        rightnum--;
+                    }
+                    
+                    if (leftnum == rightnum)
+                    {
+                        if (leftnum == r)
+                        {
+                            leftnum++;
+                        }
+                    
+                        else
+                        {
+                            rightnum--;
+                        }
+                    }
+                }
+
+                tempnum = quickArray[l];
+                quickArray[l] = quickArray[rightnum];
+                quickArray[rightnum] = tempnum;
+                
+                rightArray[numberOfChecks] = r;
+                
+                numberOfChecks++;
+                
+                if (rightnum > l)
+                {
+                    r = rightnum - 1;
+                }
+                
+                else
+                {
+                    numberOfChecks--;
+                    l = rightnum + 1;
+                }
+                
+            }
+            
+            else
+            {
+                numberOfChecks--;
+                
+                if (numberOfChecks == 0)
+                {
+                    compQuickSort = true;
+                }
+                
+                else
+                {
+                    l = r + 1;
+                    r = rightArray[numberOfChecks];
+                }
+            }
+        }
+    }                                                                            // end QuickSort
+
+/* =================================
+   M     MM  AAAAAAAA  III  N      N
+   MM   MMM  A      A   I   NN     N
+   M M MM M  A      A   I   N N    N
+   M  MM  M  AAAAAAAA   I   N  N   N
+   M      M  A      A   I   N   N  N
+   M      M  A      A   I   N    N N
+   M      M  A      A  III  N     NN
+   ===============================*/
+    public static void main(String[] args) throws IOException
+    {
+        int        intNumberOfElements = 0;
+        int        intPatternSelection = 0;
+        int        loopCounter = 0;
+        int        intSkipPatternGeneration = 0;
+        int        intUserEntry = 0;
+
+        int        intAutoMode = 0;
+    
+        long        lBeginDateTime = 0;                                    // variable to hold beginning time of processing
+        long        lEndDateTime = 0;                                        // variable to hold ending    time of processing
+
+
+        String    strFileName = "";
+        String    pattern = "";
+        String    strProgramSelection = "";    
+    
+        Scanner keyboard = new Scanner(System.in);
+
+// ==========================================================================
+// **ALGORITHM SELECTION** **ALGORITHM SELECTION** **ALGORITHM SELECTION**
+// ==========================================================================
+        System.out.println("*************************************************************");
+        System.out.println("*************************************************************");
+        System.out.println("**                                                         **");
+        System.out.println("**                    Algorith Selection                   **");
+        System.out.println("**                    1 SelectionSort                      **");
+        System.out.println("**                    2 BubbleSort                         **");
+        System.out.println("**                    3 MergeSort                          **");
+        System.out.println("**                    4 QuickSort                          **");
+        System.out.println("**                                                         **");
+        System.out.println("*************************************************************");
+        System.out.println("*************************************************************");
+
+        System.out.print("Select sorting algorithm    ==>> ");
+        intUserEntry = keyboard.nextInt();    
+        if ( intUserEntry == 1 )
+            strProgramSelection = "SelectionSort";
+        else if ( intUserEntry == 2 )
+            strProgramSelection = "BubbleSort";
+        else if ( intUserEntry == 3 )
+            strProgramSelection = "MergeSort";
+        else if ( intUserEntry == 4 )
+            strProgramSelection = "QuickSort";
+
+        System.out.println("strProgramSelection " + strProgramSelection);
+
+// ==========================================================================
+// **PATTERN SELECTION** **PATTERN SELECTION** **PATTERN SELECTION**
+// ==========================================================================
+
+        System.out.println("*************************************************************");
+        System.out.println("*************************************************************");
+        System.out.println("**                                                         **");
+        System.out.println("**          SELECT PATTERN TO LOAD INTO ARRAY              **");
+        System.out.println("**          1 LOAD ARRAY WITH ASCENDING  INTEGERS          **");
+        System.out.println("**          2 LOAD ARRAY WITH DESCENDING INTEGERS          **");
+        System.out.println("**          3 LOAD ARRAY WITH ALL        1s                **");
+        System.out.println("**          4 LOAD ARRAY WITH RANDOM     INTEGERS          **");
+        System.out.println("**                                                         **");
+        System.out.println("*************************************************************");
+        System.out.println("*************************************************************");
+
+        for( intPatternSelection = 1 ; intPatternSelection < 5 ; intPatternSelection++ )
+        {
+            if( intPatternSelection == 1 )
+                pattern = "Ascending";                                    // LOAD ARRAY WITH ASCENDING NUMBERS 0 , 1 , 2 , 3 ... N-1
+            else if( intPatternSelection == 2 )
+                pattern = "Descending";                                    // LOAD ARRAY WITH DESCENDING NUMBERS N-1 , N-2 , N-3 ... 0
+            else if( intPatternSelection == 3 )
+                pattern = "All 1s";                                        // LOAD ARRAY WITH ALL 1s 1 , 1 , 1 , ... (N-1)th 1
+            else if( intPatternSelection == 4 )
+                pattern = "Random";                                        // LOAD ARRAY WITH ALL RANDOM INTEGERS
+
+// ==========================================================================
+// **END** **END** **END** **END** **END** **END** **END** **END** **END*
+// ==========================================================================
+
+// ==========================================================================
+// *ARRAY SIZE SELECTION* *ARRAY SIZE SELECTION* *ARRAY SIZE SELECTION*
+// ==========================================================================
+            if( strProgramSelection.equals( "SelectionSort" ) || strProgramSelection.equals( "BubbleSort" ) )
+            {
+                System.out.println("*************************************************************");
+                System.out.println("*************************************************************");
+                System.out.println("**                                                         **");
+                System.out.println("**       Select array size to be sorted                    **");
+                System.out.println("**---------------------------------------------------------**");
+                System.out.println("**           N Squared Array Sizes                         **");
+                System.out.println("**---------------------------------------------------------**");
+                System.out.println("**          1    100,000  ELEMENTS                         **");
+                System.out.println("**          2    200,000  ELEMENTS                         **");
+                System.out.println("**          3    300,000  ELEMENTS                         **");
+                System.out.println("**          4    400,000  ELEMENTS                         **");
+                System.out.println("**          5    500,000  ELEMENTS                         **");
+                System.out.println("**                                                         **");
+                System.out.println("*************************************************************");
+                System.out.println("*************************************************************");
+            }
+            else if ( strProgramSelection.equals( "MergeSort" ) )
+            {
+                System.out.println("*************************************************************");
+                System.out.println("*************************************************************");
+                System.out.println("**                                                         **");
+                System.out.println("**       Select array size to be sorted                    **");
+                System.out.println("**---------------------------------------------------------**");
+                System.out.println("**           N LogN Array Sizes                            **");
+                System.out.println("**---------------------------------------------------------**");
+                System.out.println("**          1   1,000,000 ELEMENTS                         **");
+                System.out.println("**          2   2,000,000 ELEMENTS                         **");
+                System.out.println("**          3   3,000,000 ELEMENTS                         **");
+                System.out.println("**          4   4,000,000 ELEMENTS                         **");
+                System.out.println("**          5   5,000,000 ELEMENTS                         **");
+                System.out.println("**                                                         **");
+                System.out.println("*************************************************************");
+                System.out.println("*************************************************************");
+            }
+            else if ( strProgramSelection.equals( "QuickSort" ) && 
+                    ( pattern.equals( "Ascending" ) || pattern.equals( "Descending" ) ) )
+            {
+                System.out.println("*************************************************************");
+                System.out.println("*************************************************************");
+                System.out.println("**                                                         **");
+                System.out.println("**       Select array size to be sorted                    **");
+                System.out.println("**---------------------------------------------------------**");
+                System.out.println("**           N LogN Array Sizes                            **");
+                System.out.println("**---------------------------------------------------------**");
+                System.out.println("**          1    100,000  ELEMENTS                         **");
+                System.out.println("**          2    200,000  ELEMENTS                         **");
+                System.out.println("**          3    300,000  ELEMENTS                         **");
+                System.out.println("**          4    400,000  ELEMENTS                         **");
+                System.out.println("**          5    500,000  ELEMENTS                         **");
+                System.out.println("**                                                         **");
+                System.out.println("*************************************************************");
+                System.out.println("*************************************************************");
+            }
+            else if ( strProgramSelection.equals( "QuickSort" ) && 
+                    ( pattern.equals( "All 1s" ) || pattern.equals( "Random" ) ) )
+            {
+                System.out.println("*************************************************************");
+                System.out.println("*************************************************************");
+                System.out.println("**                                                         **");
+                System.out.println("**       Select array size to be sorted                    **");
+                System.out.println("**---------------------------------------------------------**");
+                System.out.println("**           N LogN Array Sizes                            **");
+                System.out.println("**---------------------------------------------------------**");
+                System.out.println("**          1   1,000,000 ELEMENTS                         **");
+                System.out.println("**          2   2,000,000 ELEMENTS                         **");
+                System.out.println("**          3   3,000,000 ELEMENTS                         **");
+                System.out.println("**          4   4,000,000 ELEMENTS                         **");
+                System.out.println("**          5   5,000,000 ELEMENTS                         **");
+                System.out.println("**                                                         **");
+                System.out.println("*************************************************************");
+                System.out.println("*************************************************************");
+            }
+
+            for ( intUserEntry = 1 ; intUserEntry < 6 ; intUserEntry++ )
+            {
+                if( strProgramSelection.equals( "SelectionSort" ) || strProgramSelection.equals( "BubbleSort" ) )
+                {
+                    intNumberOfElements = 100000 * intUserEntry;
+                }
+                else if ( strProgramSelection.equals( "MergeSort" ) ) 
+                {
+                    intNumberOfElements = 1000000 * ( intUserEntry );
+                }
+                else if ( strProgramSelection.equals( "QuickSort" ) && 
+                    ( pattern.equals( "Ascending" ) || pattern.equals( "Descending" ) ) )
+                {
+                    intNumberOfElements = 100000 * ( intUserEntry );
+                }
+                else if ( strProgramSelection.equals( "QuickSort" ) && 
+                    ( pattern.equals( "All 1s" ) || pattern.equals( "Random" ) ) )
+                {
+                    intNumberOfElements = 1000000 * ( intUserEntry );
+                }
+
+                int[] array = new int[intNumberOfElements];
+
+                if( intNumberOfElements      == 100000 )
+                    strFileName = strProgramSelection.concat( "_One_Hundred_Thousand_" );
+                else if( intNumberOfElements == 200000 )
+                    strFileName = strProgramSelection.concat( "_Two_Hundred_Thousand_" );
+                else if( intNumberOfElements == 300000 )
+                    strFileName = strProgramSelection.concat( "_Three_Hundred_Thousand_" );
+                else if( intNumberOfElements == 400000 )
+                    strFileName = strProgramSelection.concat( "_Four_Hundred_Thousand_" );
+                else if( intNumberOfElements == 500000 )
+                    strFileName = strProgramSelection.concat( "_Five_Hundred_Thousand_" );
+                else if( intNumberOfElements == 1000000 )
+                    strFileName = strProgramSelection.concat( "_One Million_" );
+                else if( intNumberOfElements == 2000000 )
+                    strFileName = strProgramSelection.concat( "_Two Million_" );
+                else if( intNumberOfElements == 3000000 )
+                    strFileName = strProgramSelection.concat( "_Three Million_" );
+                else if( intNumberOfElements == 4000000 )
+                    strFileName = strProgramSelection.concat( "_Four Million_" );
+                else if( intNumberOfElements == 5000000 )
+                    strFileName = strProgramSelection.concat( "_Five Million_" );
+
+                strFileName            = strFileName.concat( pattern );
+                FileWriter fwriter     = new FileWriter(strFileName);
+                PrintWriter outputfile = new PrintWriter(fwriter);
+
+                if ( pattern.equals      ( "Ascending"  ) )
+                    intSkipPatternGeneration = 1;
+                else if ( pattern.equals ( "Descending" ) )
+                    intSkipPatternGeneration = 2;
+                else if ( pattern.equals ( "All 1s"     ) )
+                    intSkipPatternGeneration = 3;
+                else if ( pattern.equals ( "Random"     ) )
+                    intSkipPatternGeneration = 4;
+
+                for ( loopCounter = 0 ; loopCounter < 50 ; loopCounter++ )            // 50 samples
+                {
+                    loadArrayToBeSorted( array , intNumberOfElements , intSkipPatternGeneration );
+
+// ==========================================================================
+// SHOW USER FIRST AND LAST 100 NUMBERS SO THEY CAN SEE NUMBER ORDERING
+// ==========================================================================
+                    System.out.print("1st  100 numbers in unsorted order ==>>> ");
+                    for ( int l = 0 ; l < 100 ; l++ )
+                    {
+                        System.out.print( array[l] );
+                        if ( l < 99 )
+                        {
+                            System.out.print( " , " );
+                        }
+                    }    
+                    System.out.println("");
+            
+                    System.out.print("last 100 numbers in unsorted order ==>>> ");
+                    for ( int l = intNumberOfElements - 100 ; l < intNumberOfElements ; l++ )    
+                    {
+                        System.out.print( array[l] );
+                        if ( l < intNumberOfElements - 1)
+                        {
+                            System.out.print( " , " );
+                        }
+                    }    
+                    System.out.println("");    
+                    System.out.println("");    
+
+// ==========================================================================
+// --FINISHED SHOWING ORDER OF ENTRIES--
+// ==========================================================================
+
+// ==========================================================================
+// CALL SORTING ALOGRITHM
+// ==========================================================================
+                    System.out.println("Algorithm Selected         ==>> " + strProgramSelection);
+                    System.out.println("PATTERN selected           ==>> " + pattern            );
+                    System.out.println("Number of elements to sort ==>> " + intNumberOfElements);
+                    System.out.println("File name                  ==>> " + strFileName);
+                    System.out.println("Sample Number              ==>> " + loopCounter);
+                    System.out.println("");
+            
+                    if ( strProgramSelection.equals( "SelectionSort" ) )
+                    {
+                        lBeginDateTime = new Date().getTime();        // set begin time variable
+                        SelectionSort( array );                            // call SelectionSort
+                        lEndDateTime = new Date().getTime();        // set end   time variable
+                    }
+                    else if ( strProgramSelection.equals( "BubbleSort" ) )
+                    {
+                        lBeginDateTime = new Date().getTime();        // set begin time variable
+                        BubbleSort( array );                                // call BubbleSort
+                        lEndDateTime = new Date().getTime();        // set end   time variable
+                    }
+                    else if ( strProgramSelection.equals( "MergeSort" ) )
+                    {
+                        lBeginDateTime = new Date().getTime();        // set begin time variable
+                        MergeSort( array );                                // call MergeSort
+                        lEndDateTime = new Date().getTime();        // set end   time variable
+                    }
+                    else if ( strProgramSelection.equals( "QuickSort" ) )
+                    {
+                        lBeginDateTime = new Date().getTime();        // set begin time variable
+                        QuickSort( array );                                // QuickSort
+                        lEndDateTime = new Date().getTime();        // set end   time variable
+                    }
+// ==========================================================================
+//  ***** FINISHED SORTING ***** ***** FINISHED SORTING *****
+// ==========================================================================
+                    System.out.println("Time required to sort array==>> " + ( ( lEndDateTime - lBeginDateTime ) / 1000.0 ) + " SECONDS" );
+                    outputfile.println( loopCounter         + "," + 
+                                   pattern             + "," + 
+                                   strProgramSelection + "," + 
+                                   intNumberOfElements + "," + 
+                                   ( ( lEndDateTime - lBeginDateTime ) / 1000.0 ));
+
+                    System.out.print("1st  100 numbers in   sorted order ==>>> ");
+                    for ( int l = 0 ; l < 100 ; l++ )    
+                    {
+                        System.out.print(array[l]);
+                        if ( l < 99 )
+                        {
+                            System.out.print( " , " );
+                        }
+                    }    
+                    System.out.println("");    
+
+                    System.out.print("last 100 numbers in   sorted order ==>>> ");
+                    for ( int l = intNumberOfElements - 100 ; l < intNumberOfElements ; l++ )    
+                    {
+                        System.out.print(array[l]);
+                        if ( l < intNumberOfElements - 1)
+                        {
+                            System.out.print( " , " );
+                        }
+                    }    
+
+                    System.out.println("");    
+                    System.out.println("");    
+                    System.out.println("*****END OF RUN*****     *****END OF RUN*****     *****END OF RUN*****");    
+                    System.out.println("*****END OF RUN*****     *****END OF RUN*****     *****END OF RUN*****");    
+                    System.out.println("*****END OF RUN*****     *****END OF RUN*****     *****END OF RUN*****");    
+                    System.out.println("");                        
+
+                }        //        end of loop used to generate 100 iterations of the algorithm
+
+                outputfile.close();
+
+            }        //        end of number of array elements loop
+
+        }        //        end of intPatternSelection loop    
+    
+    }        //        end main 
+
+}        //        end class SortAlgorithmAnalysisProgram
