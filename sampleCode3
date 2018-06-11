@@ -1,0 +1,147 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml1-strict.dtd">
+ 
+<!-- 4.5.html
+     A trivial 4.5 example of XHTML/JavaScript
+     -->
+<html xmlns = "http://www.w3.org/1999/xhtml">
+  <head>
+    <title> 4.5 </title>
+  </head>
+  <body>
+  <SCRIPT language="JavaScript" SRC="javascript/namecheck.js"></SCRIPT>
+  <script type = "text/javascript">
+      <!--
+
+    var name1 = prompt("Enter last name.", "");
+    var name2 = prompt("Enter first name.", "");
+    var name3 = prompt("Enter middle inital.", "");
+
+    var length1 = name1.length;
+    var length2 = name2.length;
+    var length3 = name3.length;
+
+    namecheck(length1, length2, length3);
+
+     / -->
+    </script>
+  </body>
+</html> 
+------------------------------------------------------------------------------------
+function namecheck(n1, n2, n3){
+       if (n1 > 15 || n2 > 15 || n3 > 1)
+       {
+        alert("Invalid name.");
+       }
+
+       else
+       {
+        alert("Valid name!");
+       }
+        
+    }
+-------------------------------------------------------------------------------------
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xthml11/DTD/xhtml1-strict.dtd">
+
+<!-- index.html -->
+
+<html xmlns = "http://www.w3.org/1999/xhtml">
+
+<head> 
+<title> My Web Page </title>
+<link rel = "stylesheet" type = "text/css"
+    href = "styles.css" />
+</head>
+
+<body>
+<p><img src = "http://ep.yimg.com/ca/I/everythingfurniture_2138_209968020" width = "300" height = "200"
+    alt = "GCSU Logo" /></p>
+<h1> My Webpage </h1>
+<p> Hello, I'm Joseph Mycek. I am a senior at GCSU who is majoring in computer science.</p>
+<p>This is my webpage.</p>
+<p> <img src = "http://i54.tinypic.com/mmannp.jpg" height = "150"
+    alt = "Joseph Mycek" /> </p> 
+<p> <a href = "labsandhws.html"> Labs and HWs </a> </p>
+<p> <a href = "aboutme.html"> About Me </a> </p>
+<p> <a href = "forms.html"> Sign Up </a> </p>
+<p> Project #2 Under Construction </p>
+<p> Project #3 Under Construction </p>
+<p> Other Web Pages Under Construction </p>
+</body>
+</html>
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xthml11/DTD/xhtml1-strict.dtd">
+
+<!-- labsandhws.html -->
+
+<html xmlns = "http://www.w3.org/1999/xhtml">
+
+<head> 
+<title> Labs and Homeworks </title>
+<style type = "text/css">
+    h1  {font-weight: bold;
+        color:green}
+    h2 { text-indent: 4.0in}
+    p   {color:green}
+    .isred {color:red}
+    
+</style>
+
+</head>
+
+<body>
+<h1><img src = "http://ep.yimg.com/ca/I/everythingfurniture_2138_209968020" width = "300" height = "200"
+    alt = "GCSU Logo" /> </h1>
+<h1> Joseph Mycek's <span class = "isred"> Labs </span> and Homeworks</h1>
+<h2> <img src = "http://profile.ak.fbcdn.net/hprofile-ak-snc4/hs1339.snc4/161100_1039467668_7976435_q.jpg" width = "100" height = "120"
+    alt = "Picture" /> </h2> 
+<p> <a href = "cssZenGarden.html"> Zen Garden Custom Design </a> </p>
+<p> <a href = "4.1.html"> HW 4.1 </a> </p>
+<p> <a href = "4.5.html"> HW 4.5 </a> </p>
+<p> <a href = "index.html"> Back to Main Page </a> </p>
+</body>
+</html>
+-------------------------------------------------------------------------------------------
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml1-strict.dtd">
+ 
+<!-- 4.1.html
+     A trivial 4.1 example of XHTML/JavaScript
+     -->
+<html xmlns = "http://www.w3.org/1999/xhtml">
+  <head>
+    <title> 4.1 </title>
+  </head>
+  <body>
+  <SCRIPT language="JavaScript" SRC="javascript/squarecube.js"></SCRIPT>
+  <script type = "text/javascript">
+      <!--
+    
+
+    squarecube();
+
+      // -->
+    </script>
+  </body>
+</html>
+----------------------------------------------------------------------------------------------------------------
+function squarecube() {    
+    alert("Numbers, their Squares and their Cubes" + "\n"
+        + "5:  25  125" + "\n"
+        + "6:  36  216" + "\n"
+        + "7:  49  343" + "\n"
+        + "8:  64  512" + "\n"
+        + "9:  81  729" + "\n"
+        + "10:  100  1000" + "\n"
+        + "11:  121  1331" + "\n"
+        + "12:  144  1728" + "\n"
+        + "13:  169  2197" + "\n"
+        + "14:  196  2744" + "\n"
+        + "15:  225  3375" + "\n");
+    }
